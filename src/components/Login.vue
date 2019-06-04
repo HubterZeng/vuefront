@@ -61,7 +61,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.axios
-            .post("http://localhost:80/api/system/login", {
+            .post("http://47.102.198.100:9999/api/system/login", {
               userName: this.userData.userName,
               password: this.userData.password
             })
@@ -108,7 +108,7 @@ export default {
   height: 100%;
 }
 .loginContent {
-  background: rgb(70, 55, 95);
+  background: rgba(143, 193, 250, 0.603);
   display: inline-block;
   border-radius: 4px;
   position: absolute;
@@ -127,7 +127,7 @@ export default {
   font-size: 12px;
   float: right;
   margin-left: 10px;
-  color: #409eff;
+  color: black;
   text-decoration: underline;
 }
 .foot {

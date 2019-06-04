@@ -53,7 +53,7 @@ export default {
             if (valid) {
                 
              this.axios
-            .post("http://localhost:80/api/system/forgetPassword", {
+            .post("http://47.102.198.100:9999/api/system/forgetPassword", {
               questionforReset: this.forget.questionforReset,
               accountUser: this.forget.accountUser,
               password:  this.forget.password

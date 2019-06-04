@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <h1 font-size:large>健康咨询系统</h1>
     <!-- <img src="./assets/img/logo.png"> -->
     <router-view/>
     <!-- 在页面中放入一个路由视图容器 ,公用部分，变得只是路由器里面的内容
@@ -16,7 +17,7 @@ export default {
 <style>
 body{
   margin: 0;
-  background-image: url(./assets/img/login/login.png);
+  background-color: rgba(174, 240, 245, 0.589);
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

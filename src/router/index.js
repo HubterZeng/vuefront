@@ -7,6 +7,7 @@ const Login=()=>import('../components/Login.vue')
 const patientRegister = () => import('../components/patientRegister')
 const doctorRegister = () => import('../components/doctorRegister')
 const forget = () => import('../components/forget')
+const test= ()=>import('../components/Test.vue')
 Vue.use(Router)
 export default new Router({
   mode:'history',
@@ -40,7 +41,11 @@ export default new Router({
       path: '/forget',
       name: 'forget',
       component: forget
-    },
+    }, {
+      path:'/test',
+      name:'test',
+      component:test
+    }
  
 
   ]

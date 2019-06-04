@@ -91,7 +91,7 @@ export default {
         if (valid) {
           this.axios
             .post(
-              "http://localhost:80/api/system/patientRegister",
+              "http://47.102.198.100:9999/api/system/patientRegister",
               qs.stringify(this.registerForm)
             )
             .then(res => {

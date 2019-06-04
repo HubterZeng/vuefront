@@ -15,6 +15,9 @@ export default {
       quesData:false,
       text:false,
     },
-    consid:""
+    consid:"",
+    to_doc:"",
+    to_user:"",
+
 }
 </script>

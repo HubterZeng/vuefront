@@ -235,7 +235,7 @@ export default {
       global_.showStatus.findFriends = false;
 
       this.axios
-        .post("http://localhost:80/api/system/consuleHistory")
+        .post("http://47.102.198.100:9999/api/system/consuleHistory")
         .then(res => {
           this.tableData = res.data;
           this.total=this.tableData.length;
@@ -264,7 +264,7 @@ export default {
         if (valid) {
           this.axios
             .post(
-              "http://localhost:80/api/system/addConsule",
+              "http://47.102.198.100:9999/api/system/addConsule",
               qs.stringify(this.questionForm)
             )
             .then(res => {
@@ -287,7 +287,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.axios
-            .post("http://localhost:80/api/system/findDoctor", {
+            .post("http://47.102.198.100:9999/api/system/findDoctor", {
               userAccount: this.findFriendsForm.userAccount
             })
             .then(res => {
@@ -309,7 +309,7 @@ export default {
         if (valid) {
           console.log(global_.userid);
           this.axios
-            .post("http://localhost:80/api/system/addFriends", {
+            .post("http://47.102.198.100:9999/api/system/addFriends", {
               userAccount: this.findFriendsForm.userAccount,
               userid: global_.userid
             })
@@ -317,7 +317,7 @@ export default {
               if (res.data.status + "" == "true") {
                 alert("添加成功");
                 this.axios
-                  .post("http://localhost:80/api/system/getFriends")
+                  .post("http://47.102.198.100:9999/api/system/getFriends")
                   .then(res => {
                     this.navData = res.data;
                   })
@@ -342,7 +342,7 @@ export default {
     //   console.log("userName  Created");
     //  console.log(global_.Data+'xxxxxxxxxxxxx');
     this.axios
-      .post("http://localhost:80/api/system/getUserInfo")
+      .post("http://47.102.198.100:9999/api/system/getUserInfo")
       .then(res => {
         console.log(res.data.username); //获取属性的正确写法
         this.userName = res.data.username;
@@ -354,7 +354,7 @@ export default {
         console.log(res);
       });
     this.axios
-      .post("http://localhost:80/api/system/getFriends")
+      .post("http://47.102.198.100:9999/api/system/getFriends")
       .then(res => {
         this.navData = res.data;
       })

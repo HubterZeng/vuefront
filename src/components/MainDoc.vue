@@ -20,7 +20,7 @@
               </template>
               <el-menu-item-group>
                 <label v-for="(item,index) in navData" :key="index">
-                  <el-menu-item v-on:click="showChat()">
+                  <el-menu-item v-on:click="showChat(item.userid,item.friendsnameuser)">
                     <span slot="title">{{item.friendsnameuser}}</span>
                   </el-menu-item>
                 </label>
@@ -68,10 +68,10 @@
           </div>
           <div v-show="showStatus.Chat">
             <div style="height:650px;background-color:#fff;font-size:25px">
-              聊天室
+             {{this.to_user}}
               <div class="main">
                 <ul class="content">
-                  <li v-for="todo in todos" :key="todo.key" :class="todo.position">
+                  <li v-show="toAll.from==this.to_user" v-for="todo in toAll" :key="todo.key" :class="todo.position">
                     <p :class="todo.class">{{todo.text}}</p>
                   </li>
                 </ul>
@@ -180,8 +180,11 @@
 import qs from "qs";
 import global_ from "../components/Global";
 export default {
+  //toAll存放所有的记录，然后在点击好友时，动态的将符合条件的数据push到toOne，点击另一个好友时，清空toOne.(备选)
+  //to_user 发给谁   userid:当前用户的
   data() {
     return {
+      to_user:"",
       showStatus: global_.showStatusDoc,
       userName: "xxx",
       userid: "",
@@ -189,26 +192,8 @@ export default {
       tableData: [],
       qusTableData: [],
       textarea: "",
-      todos: [
-        {
-          key: "1",
-          text: "你好啊",
-          position: "left",
-          class: "leftP"
-        },
-        {
-          key: "2",
-          text: "你好",
-          position: "right",
-          class: "rightP"
-        },
-        {
-          key: "3",
-          text: "再见",
-          position: "left",
-          class: "leftP"
-        }
-      ],
+      toAll: [],
+      toOne:[],
       navData: [],
       treatmentForm: {
         docid: global_.userid,
@@ -236,13 +221,18 @@ export default {
       console.log(key);
       this.activeIndex = key;
     },
-    showChat() {
+    showChat(userid,name) {
+      global_.to_user=name;
+      this.to_user=global_.to_user;
+      console.log(this.to_user+'          '+name);
       global_.showStatusDoc.Chat = true;
       global_.showStatusDoc.lookData = false;
       global_.showStatusDoc.addTreatment = false;
       global_.showStatusDoc.findFriends = false;
       global_.showStatusDoc.qusData = false;
       global_.showStatus.text = false;
+    
+      this.getMessage();
     },
     findFriendsShow() {
       global_.showStatusDoc.findFriends = true;
@@ -261,7 +251,7 @@ export default {
       global_.showStatus.text = false;
 
       this.axios
-        .post("http://localhost:80/api/system/readHistory")
+        .post("http://47.102.198.100:9999/api/system/readHistory")
         .then(res => {
           this.tableData = res.data;
         })
@@ -278,7 +268,7 @@ export default {
       global_.showStatus.text = false;
 
       this.axios
-        .post("http://localhost:80/api/system/lookQuestion")
+        .post("http://47.102.198.100:9999/api/system/lookQuestion")
         .then(res => {
           this.qusTableData = res.data;
         })
@@ -287,13 +277,45 @@ export default {
         });
     },
     sendMessage() {
-      this.todos.push({
+      this.toAll.push({
         key: "",
         text: this.textarea,
         position: "right",
         class: "rightP"
       });
+       this.axios
+            .post("http://47.102.198.100:9999/api/system/sendMessage", {
+              toId:global_.to_user,
+              fromId: global_.userid,
+              news:this.textarea
+            })
+            .then(res => {
+              if (res.data.status + "" == "true") {
+                alert("发送成功");
+              }
+            })
+            .catch(res => {
+              console.log(res);
+            });
+      //  this.toOne.push({
+      //   key: "",
+      //   text: this.textarea,
+      //   position: "right",
+      //   class: "rightP"
+      // });
       this.textarea = "";
+    },
+    getMessage(){
+      this.axios
+            .post("http://47.102.198.100:9999/api/system/getMessage", {
+              toId: global_.userid
+            })
+            .then(res => {
+            this.toAll=res.data;
+            })
+            .catch(res => {
+              console.log(res);
+            });
     },
     submittreatmentForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -303,7 +325,7 @@ export default {
           console.log();
           this.axios
             .post(
-              "http://localhost:80/api/system/addTreatment",
+              "http://47.102.198.100:9999/api/system/addTreatment",
               qs.stringify(this.treatmentForm)
             )
             .then(res => {
@@ -328,7 +350,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.axios
-            .post("http://localhost:80/api/system/findPatient", {
+            .post("http://47.102.198.100:9999/api/system/findPatient", {
               userAccount: this.findFriendsForm.userAccount
             })
             .then(res => {
@@ -352,7 +374,7 @@ export default {
         if (valid) {
           console.log(global_.userid);
           this.axios
-            .post("http://localhost:80/api/system/addFriends", {
+            .post("http://47.102.198.100:9999/api/system/addFriends", {
               userAccount: this.findFriendsForm.userAccount,
               userid: global_.userid
             })
@@ -382,7 +404,7 @@ export default {
     },
     getUserInfo() {
       this.axios
-        .post("http://localhost:80/api/system/getUserInfo")
+        .post("http://47.102.198.100:9999/api/system/getUserInfo")
         .then(res => {
           //  console.log(res.data.username); //获取属性的正确写法
           this.userName = res.data.username;
@@ -396,7 +418,7 @@ export default {
     },
     readHistory() {
       this.axios
-        .post("http://localhost:80/api/system/readHistory")
+        .post("http://47.102.198.100:9999/api/system/readHistory")
         .then(res => {
           this.tableData = res.data;
           //console.log(res.data.username); //获取属性的正确写法
@@ -409,7 +431,7 @@ export default {
     },
     getFriends() {
       this.axios
-        .post("http://localhost:80/api/system/getFriends")
+        .post("http://47.102.198.100:9999/api/system/getFriends")
         .then(res => {
           this.navData = res.data;
         })
@@ -419,7 +441,7 @@ export default {
     },
     seeMyAnswer(index) {
       this.axios
-        .post("http://localhost:80/api/system/getMyTreatment", {
+        .post("http://47.102.198.100:9999/api/system/getMyTreatment", {
           consId: index
         })
         .then(res => {
